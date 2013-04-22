@@ -13,16 +13,19 @@ class App {
 
 	/**
 	 * The Controller object.
+	 * @var \Controller
 	 */
 	public static $controller = null;
 
 	/**
 	 * The current customer.
+	 * @var Customer
 	 */
 	public static $customer = null;
 
 	/**
 	 * The current user account.
+	 * @var Account
 	 */
 	public static $acct = null;
 
@@ -52,6 +55,8 @@ class App {
 	 * Usage:
 	 *
 	 *     saasy\App::bootstrap ($controller);
+	 *
+	 * @param \Controller $controller
 	 */
 	public static function bootstrap ($controller) {
 		self::$controller = $controller;
@@ -75,6 +80,7 @@ class App {
 		$parts = explode ('.', $_SERVER['HTTP_HOST']);
 		if (count ($parts) === 3) {
 			$sub = array_shift ($parts);
+			/** @var $customer Customer */
 			$customer = Customer::query ()
 				->where ('subdomain', $sub)
 				->single ();
@@ -84,6 +90,7 @@ class App {
 
 				// Get the account from the user
 				if (\User::require_login ()) {
+					/** @var $acct Account */
 					$acct = Account::query ()
 						->where ('user', \User::val ('id'))
 						->where ('customer', $customer->id)
@@ -99,6 +106,7 @@ class App {
 
 	/**
 	 * Get the domain minus any subdomain.
+	 * @return string
 	 */
 	public static function base_domain () {
 		$parts = explode ('.', $_SERVER['HTTP_HOST']);
@@ -110,6 +118,10 @@ class App {
 
 	/**
 	 * Get/set the current customer.
+	 *
+	 * @param Customer $customer
+	 *
+	 * @return Customer
 	 */
 	public static function customer ($customer = null) {
 		if ($customer !== null) {
@@ -120,6 +132,10 @@ class App {
 
 	/**
 	 * Get/set the current user account.
+	 *
+	 * @param Account $acct
+	 *
+	 * @return Account
 	 */
 	public static function acct ($acct = null) {
 		if ($acct !== null) {
@@ -131,6 +147,11 @@ class App {
 	/**
 	 * Authorize the user to see the account, or take
 	 * appropriate action if they're not authorized.
+	 *
+	 * @param \Page $page
+	 * @param \Template $tpl
+	 *
+	 * @return bool
 	 */
 	public static function authorize ($page, $tpl) {
 		$conf = self::conf ();
@@ -167,6 +188,8 @@ class App {
 	/**
 	 * Authorize the user to see the account, or return false
 	 * to allow the handler to return a REST error response.
+	 *
+	 * @return bool
 	 */
 	public static function authorize_restful () {
 		$customer = self::customer ();
@@ -190,6 +213,8 @@ class App {
 
 	/**
 	 * Get the app name.
+	 *
+	 * @return string
 	 */
 	public static function name () {
 		$conf = self::conf ();
@@ -198,6 +223,8 @@ class App {
 
 	/**
 	 * Get the href prefix for the app.
+	 *
+	 * @return string
 	 */
 	public static function href () {
 		$conf = self::conf ();
@@ -209,6 +236,8 @@ class App {
 	 * correctly to a Saasy-enabled handler by rewriting the
 	 * app name portion of the handler to the [App Settings]
 	 * app_alias value.
+	 *
+	 * @return string
 	 */
 	public static function make_href ($handler) {
 		$conf = self::conf ();
@@ -220,6 +249,8 @@ class App {
 
 	/**
 	 * Fetch the footer menu for your app.
+	 *
+	 * @return string
 	 */
 	public static function footer () {
 		$conf = self::conf ();
@@ -231,6 +262,8 @@ class App {
 
 	/**
 	 * Load the custom theme for your app.
+	 *
+	 * @return string
 	 */
 	public static function theme () {
 		$conf = self::conf ();
@@ -242,6 +275,8 @@ class App {
 
 	/**
 	 * Whether the app has search capabilities.
+	 *
+	 * @return bool
 	 */
 	public static function has_search () {
 		if (! \User::require_login ()) {
@@ -254,6 +289,8 @@ class App {
 
 	/**
 	 * Add search to your app.
+	 *
+	 * @return string
 	 */
 	public static function search () {
 		$conf = self::$conf;
@@ -265,6 +302,8 @@ class App {
 
 	/**
 	 * Add search to your app.
+	 *
+	 * @return string
 	 */
 	public static function search_header () {
 		$conf = self::$conf;
@@ -279,6 +318,10 @@ class App {
 
 	/**
 	 * Generate the top-level menu for the sections of your app.
+	 *
+	 * @param string|bool $current
+	 *
+	 * @return string
 	 */
 	public static function menu ($current = false) {
 		if (! \User::require_login ()) {
@@ -352,6 +395,8 @@ class App {
 
 	/**
 	 * Get the first section.
+	 *
+	 * @return array
 	 */
 	public static function first_section () {
 		$conf = self::$conf;
@@ -384,6 +429,10 @@ class App {
 	 *     );
 	 *
 	 * Note: Level 0 implies a disabled account.
+	 *
+	 * @param string|null $level
+	 *
+	 * @return array|mixed|null
 	 */
 	public static function limits ($level = null) {
 		if (self::$limits === null) {
@@ -410,6 +459,13 @@ class App {
 	 *
 	 *     $customer = saasy\App::customer ();
 	 *     $member_limit = saasy\App::limit ($customer->level, 'members', -1);
+	 */
+	/**
+	 * @param string $level
+	 * @param string $key
+	 * @param integer $default
+	 *
+	 * @return bool
 	 */
 	public static function limit ($level, $key, $default = -1) {
 		$limits = self::limits ($level);

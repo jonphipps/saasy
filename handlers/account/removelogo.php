@@ -7,6 +7,8 @@
 namespace saasy;
 
 // Authorize user
+/** @var $page \Page */
+/** @var $tpl \Template */
 if (! App::authorize ($page, $tpl)) return;
 
 $customer = App::customer ();

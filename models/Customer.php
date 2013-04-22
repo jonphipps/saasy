@@ -17,6 +17,10 @@ namespace saasy;
  * Level may be used to enable/disable features for a customer
  * through the 'limits' setting. Note that level=0 implies a disabled
  * account.
+ * @property mixed id
+ * @property string name
+ * @property mixed subdomain
+ * @property int level
  */
 class Customer extends \Model {
 	public $table = '#prefix#saasy_customer';
@@ -56,6 +60,7 @@ class Customer extends \Model {
 	 * The output for the header of the site.
 	 */
 	public static function header () {
+		/** @var Customer $company */
 		$company = App::customer ();
 		if (! $company) {
 			return App::name ();
