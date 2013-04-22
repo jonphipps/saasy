@@ -14,6 +14,11 @@ namespace saasy;
  * - enabled - 0 = no, 1 = yes
  *
  * Indexed by user and customer. User/customer combo must be unique.
+ * @property int id
+ * @property int   enabled
+ * @property \User user
+ * @property Customer customer
+ * @property string{"owner","member"} type
  */
 class Account extends \Model {
 	public $table = '#prefix#saasy_acct';
