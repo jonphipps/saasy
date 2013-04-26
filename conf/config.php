@@ -14,7 +14,7 @@ app_alias = myapp
 ; Use 'www' instead of a subdomain when a customer is
 ; not logged in
 
-include_www = Off
+include_www = On
 
 ; A custom handler that generates your custom footer
 ; navigation links.
@@ -30,6 +30,12 @@ theme = Off
 ; for your app.
 
 search = Off
+
+; An URL to call for autocomplete data for the search
+; typeahead function. This URL should provide a JSON
+; response with an array of strings.
+
+search_autocomplete = Off
 
 ; A static method to call for a list of access limits
 ; for each account level.
