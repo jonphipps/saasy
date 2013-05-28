@@ -78,7 +78,7 @@ class App {
 
 		// Get the customer from the subdomain
 		$parts = explode ('.', $_SERVER['HTTP_HOST']);
-		if (count ($parts) === 3) {
+		if ( 'www' !== $parts[0] and count ($parts) === 3) {
 			$sub = array_shift ($parts);
 			/** @var $customer Customer */
 			$customer = Customer::query ()
@@ -163,7 +163,6 @@ class App {
 			if (strpos ($_SERVER['REQUEST_URI'], '/saasy/') === 0) {
 				self::$controller->redirect ('/');
 			}
-
 			$url = ($_SERVER['REQUEST_URI'] === '/')
 				? 'admin/page'
 				: 'admin/page' . $_SERVER['REQUEST_URI'];
