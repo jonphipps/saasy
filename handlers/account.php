@@ -23,6 +23,7 @@ $form->data = array (
 	'photo' => $acct->photo (),
 	'customer_name' => $customer->name,
 	'subdomain' => $customer->subdomain,
+	'public' => $customer->public,
 	'customer_logo' => $customer->logo ()
 );
 
@@ -54,10 +55,11 @@ echo $form->handle (function ($form) use ($page, $customer, $acct) {
 	if (is_uploaded_file ($_FILES['photo']['tmp_name'])) {
 		$acct->save_photo ($_FILES['photo']);
 	}
-	
+
 	if ($acct->type === 'owner') {
 		// update customer too
 		$customer->name = $_POST['customer_name'];
+		$customer->public = ($_POST['public'] == 'yes') ? true : false;
 		if ($customer->subdomain !== $_POST['subdomain']) {
 			$customer->subdomain = $_POST['subdomain'];
 			$domain_has_changed = true;

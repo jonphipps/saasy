@@ -29,7 +29,9 @@
 	<span class="notice" id="subdomain-notice">{"Please choose a unique domain for your company."}</span>
 </p>
 
-<p><input type="submit" value="{"Sign Up"}" /></p>
+<p><input type="checkbox" name="public" id="public" value="yes" {% if public %}checked{% end %} /> {"Public Site"}</p>
+
+  <p><input id="submitButton" type="submit" value="{"Sign Up"}" /></p>
 
 </form>
 
@@ -38,7 +40,7 @@ $(function () {
 	function update_subdomain () {
 		var sub = $('#subdomain'),
 			val = sub.val ();
-		
+
 		val = $(this).val ()
 			.toLowerCase ()
 			.trim ()

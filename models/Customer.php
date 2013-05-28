@@ -18,10 +18,11 @@ namespace saasy;
  * through the 'limits' setting. Note that level=0 implies a disabled
  * account.
  *
- * @property mixed id
+ * @property int    id
  * @property string name
- * @property mixed subdomain
- * @property int level
+ * @property string subdomain
+ * @property int    public
+ * @property int    level
  */
 class Customer extends \Model {
 	public $table = '#prefix#saasy_customer';
@@ -29,6 +30,8 @@ class Customer extends \Model {
 	/**
 	 * Model relations.
 	 * - $customer->accounts() will return the associated Accounts
+	 *
+	 * @var array
 	 */
 	public $fields = array (
 		'accounts' => array ('has_many' => '\saasy\Account', 'field_name' => 'customer')
@@ -36,6 +39,8 @@ class Customer extends \Model {
 
 	/**
 	 * List all members (merges account and user info).
+	 *
+	 * @return array|bool
 	 */
 	public function members () {
 		$res = \DB::fetch (
@@ -59,6 +64,8 @@ class Customer extends \Model {
 
 	/**
 	 * The output for the header of the site.
+	 *
+	 * @return string
 	 */
 	public static function header () {
 		$company = App::customer ();
@@ -80,10 +87,12 @@ class Customer extends \Model {
 
 	/**
 	 * Get the full domain for the current customer.
+	 *
+	 * @return string
 	 */
 	public function domain () {
 		$parts = explode ('.', $_SERVER['HTTP_HOST']);
-		if (count ($parts === 3)) {
+		if (count ($parts) === 3) {
 			array_shift ($parts);
 		}
 		return $this->subdomain . '.' . join ('.', $parts);
@@ -91,6 +100,11 @@ class Customer extends \Model {
 
 	/**
 	 * Returns a correctly sized logo if available. If not, returns false.
+	 *
+	 * @param int $width
+	 * @param int $height
+	 *
+	 * @return bool|string
 	 */
 	public function logo ($width = 250, $height = 40) {
 		$files = glob ('cache/saasy/logos/' . $this->id . '.{jpg,png,gif}', GLOB_BRACE);
@@ -104,6 +118,10 @@ class Customer extends \Model {
 
 	/**
 	 * Save a new logo image.
+	 *
+	 * @param string $upload
+	 *
+	 * @return bool
 	 */
 	public function save_logo ($upload) {
 		$ext = strtolower (pathinfo ($upload['name'], PATHINFO_EXTENSION));
